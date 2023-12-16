@@ -1,12 +1,10 @@
 using System;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Linq;
 
 namespace WeatherForecast
@@ -25,12 +23,12 @@ namespace WeatherForecast
 
             var result = Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                Date = DateTime.Now.AddDays(index),
                 TemperatureC = temp = randomNumber.Next(-20, 55),
                 Summary = GetSummary(temp)
             }).ToArray();
 
-            return new OkObjectResult(result);
+            return new OkObjectResult(JsonSerializer.Serialize(result));
         }
         private static string GetSummary(int temp)
         {
@@ -52,7 +50,7 @@ namespace WeatherForecast
 
         public class WeatherForecast
         {
-            public DateOnly Date { get; set; }
+            public DateTime Date { get; set; }
             public int TemperatureC { get; set; }
             public string Summary { get; set; }
             public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);

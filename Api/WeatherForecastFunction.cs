@@ -1,24 +1,17 @@
 using System;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Net;
-using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
 
 namespace Api
 {
-    public class WeatherForecastFunction
-    {
-        private readonly ILogger _logger;
-        public WeatherForecastFunction(ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<WeatherForecastFunction>();
-        }
+    public static class WeatherForecastFunction
+    { 
 
         [FunctionName(nameof(WeatherForecastFunction))]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
+        public static HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
         {
             var randomNumber = new Random();
             var temp = 0;
@@ -35,7 +28,7 @@ namespace Api
             return response;
         }
 
-        private string GetSummary(int temp)
+        private static string GetSummary(int temp)
         {
             var summary = "Mild";
             if (temp >= 32)
